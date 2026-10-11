@@ -17,11 +17,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             MetoDenikTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     Greeting(
-                        name = "Hacker",
+                        name = "Meteo deník — Jaroslav Zvoníček",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -33,7 +36,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = name,
         modifier = modifier
     )
 }
@@ -42,6 +45,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MetoDenikTheme {
-        Greeting("Android")
+        Greeting(
+            name = "Meteo deník — Jaroslav Zvoníček"
+        )
     }
 }

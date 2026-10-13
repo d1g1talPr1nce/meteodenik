@@ -1,138 +1,51 @@
-
 # Cvičení 4.1 — Dekompilační protokol
 
 ## 1. Data class — Mesto
 
-Zdrojová konstrukce:
+Ve zdrojovém kódu jsem napsal:
+
 `data class Mesto(val nazev: String, val teplota: Double)`
 
-### Výsledek analýzy
+Kompilátor vytvořil soukromá pole `nazev` a `teplota`, konstruktor a gettery. Doplnil také metody `component1()`, `component2()`, `copy()`, `copy$default()`, `equals()`, `hashCode()` a `toString()`. Ve výstupu bylo i pole `$stable`, které přidal Compose compiler.
 
-Kompilátor automaticky vytvořil:
-
-- Privátní final pole nazev a teplota.
-- Konstruktor a metody getNazev(), getTeplota().
-- Metody component1() a component2().
-- Metody copy() a copy$default().
-- Metody equals(), hashCode() a toString().
-- Pole $stable přidané Compose compilerem.
-
-### Pozorování
-
-Metoda copy() vytváří novou instanci třídy Mesto.
-Metoda copy$default() využívá bitovou masku pro
-určení výchozích argumentů.
-
-Metoda equals() porovnává jednotlivé vlastnosti
-objektů, nikoliv pouze jejich reference.
-
-Kotlin tedy generuje podstatnou část implementace
-datové třídy automaticky.
-
+Metoda `copy()` vytvoří nový objekt s možností změnit některé hodnoty. Pomocná metoda `copy$default()` pomocí bitové masky určuje, které hodnoty se převezmou z původního objektu. Metoda `equals()` porovnává název a teplotu, takže dva různé objekty se stejnými hodnotami mohou být shodné.
 
 ## 2. Object — Konfigurace
 
-Zdrojová konstrukce:
+Ve zdrojovém kódu jsem použil:
+
 `object Konfigurace`
 
-### Výsledek analýzy
+Ve výsledku vznikla třída `Konfigurace` se soukromým konstruktorem a statickým polem `INSTANCE`, které obsahuje její jedinou běžně používanou instanci. Dále obsahuje pole `ZAKLADNI_URL` a pole `$stable` přidané Compose compilerem.
 
-Kompilátor vytvořil:
+Ve statickém inicializačním bloku se objekt vytvoří instrukcí `NEW`, pomocí `INVOKESPECIAL` se zavolá konstruktor a `PUTSTATIC` uloží odkaz do `INSTANCE`. Díky soukromému konstruktoru nelze běžným způsobem vytvářet další instance.
 
-- Final třídu Konfigurace.
-- Statické final pole INSTANCE.
-- Privátní konstruktor Konfigurace().
-- Statický inicializační blok.
-- Statické pole ZAKLADNI_URL.
-- Pole $stable přidané Compose compilerem.
+## 3. Extension funkce — naStupneCelsia
 
-### Pozorování
+Ve zdrojovém kódu jsem napsal:
 
-Instrukce NEW alokuje objekt Konfigurace.
-
-Instrukce INVOKESPECIAL zavolá privátní
-konstruktor objektu.
-
-Instrukce PUTSTATIC uloží referenci
-do statického pole INSTANCE.
-
-Privátní konstruktor zabraňuje běžnému
-vytváření dalších instancí.
-
-Kotlin implementuje object pomocí
-standardních mechanismů JVM.
-
-
-
-## 3. Extension function — naStupneCelsia
-
-Zdrojová konstrukce:
 `fun Double.naStupneCelsia(): String`
 
-### Výsledek analýzy
+Funkce se přeložila na statickou metodu `naStupneCelsia(double)` ve třídě `PitvaKt`. Hodnota, nad kterou funkci volám, se předává jako parametr typu `double`.
 
-Kompilátor vytvořil:
+Do samotné třídy `Double` se tedy žádná nová metoda nepřidává. Kotlin pouze umožňuje pohodlnější zápis jejího volání.
 
-- Třídu PitvaKt.
-- Statickou metodu naStupneCelsia(double).
-- Původní receiver Double převedl na parametr double.
+## 4. Funkce s funkčním parametrem — vypisVse
 
-### Pozorování
+Ve zdrojovém kódu jsem napsal:
 
-Extension funkce se nepřidává do třídy Double.
-Kompilátor ji reprezentuje statickou metodou
-ve třídě PitvaKt.
-
-
-## 4. Higher-order function — vypisVse
-
-Zdrojová konstrukce:
 `fun vypisVse(mesta: List<Mesto>, akce: (Mesto) -> Unit)`
 
-### Výsledek analýzy
+Vznikla statická metoda, která přijímá seznam měst a parametr typu `Function1`. Ten představuje předanou funkci, která dostane jedno město a nevrací žádný užitečný výsledek.
 
-Kompilátor vytvořil:
+Předaná funkce se volá přes metodu `invoke()`. Zápis `forEach` se ve výstupu změnil na procházení seznamu pomocí iterátoru a metod `hasNext()` a `next()`.
 
-- Statickou metodu vypisVse().
-- Parametr List<Mesto>.
-- Parametr Function1<Mesto, Unit>.
-- Volání metody Function1.invoke().
+## 5. Suspend funkce — pockejAVrat
 
-### Pozorování
+Ve zdrojovém kódu jsem napsal:
 
-Funkční typ (Mesto) -> Unit je na JVM
-reprezentován rozhraním Function1.
-
-Cyklus forEach byl převeden na iteraci
-pomocí Iterator, hasNext() a next().
-
-
-## 5. Suspend function — pockejAVrat
-
-Zdrojová konstrukce:
 `suspend fun pockejAVrat(): Int`
 
-### Výsledek analýzy
+Po překladu metoda vrací `Object` a má navíc parametr `Continuation`. Vznikla také pomocná třída `PitvaKt$pockejAVrat$1`, která uchovává stav potřebný pro pokračování funkce.
 
-Kompilátor vytvořil:
-
-- Statickou metodu vracející Object.
-- Parametr Continuation<Integer>.
-- Pomocnou třídu PitvaKt$pockejAVrat$1.
-- Stavovou proměnnou label.
-- Instrukci tableswitch pro přepínání stavů.
-- Kontrolu hodnoty COROUTINE_SUSPENDED.
-
-### Pozorování
-
-Funkce suspend byla transformována
-na stavový automat.
-
-Proměnná label rozlišuje stav před
-pozastavením a po obnovení korutiny.
-
-Funkce delay(100) může vrátit
-COROUTINE_SUSPENDED.
-
-Po pokračování funkce vrací hodnotu 42.
-
+Proměnná `label` a instrukce `tableswitch` určují, odkud má funkce pokračovat. Pokud se při `delay(100)` pozastaví, vrátí značku `COROUTINE_SUSPENDED`. Po obnovení dokončí zbytek kódu a vrátí hodnotu `42`. Návratový typ `Object` umožňuje vrátit jak tuto značku, tak zabalený číselný výsledek.

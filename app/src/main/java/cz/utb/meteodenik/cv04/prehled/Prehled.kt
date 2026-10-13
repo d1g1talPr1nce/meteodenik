@@ -1,18 +1,18 @@
 
 package cz.utb.meteodenik.cv04.prehled
 
-// 1. Datová třída
+
 data class Mesto(
     val nazev: String,
     val teplota: Double
 )
 
-// 2. Extension funkce
+
 fun Mesto.popis(): String {
     return "$nazev: $teplota C"
 }
 
-// 3. Sealed interface pro stav
+
 sealed interface StavPrehledu {
     data object Nacita : StavPrehledu
     data object Chyba : StavPrehledu
@@ -20,13 +20,13 @@ sealed interface StavPrehledu {
     data object Hotovo : StavPrehledu
 }
 
-// 4. Třída Prehled
+
 class Prehled(
     val mesta: List<Mesto>,
     var stav: StavPrehledu = StavPrehledu.Hotovo
 ) {
 
-    // Výpis aktuálního stavu
+    
     fun textStavu(): String = when (stav) {
         StavPrehledu.Nacita -> "Načítám…"
         StavPrehledu.Chyba -> "Chyba"
@@ -34,12 +34,12 @@ class Prehled(
         StavPrehledu.Hotovo -> "Měst: ${mesta.size}"
     }
 
-    // Nalezení města s nejvyšší teplotou
+    
     fun nejteplejsi(): Mesto? {
         return mesta.maxByOrNull { it.teplota }
     }
 
-    // Výpis všech měst
+    
     fun vypis() {
         mesta.forEach { mesto ->
             println(mesto.popis())
@@ -55,7 +55,7 @@ class Prehled(
     }
 }
 
-// 5. Hlavní funkce
+
 fun main() {
 
     val mesta = listOf(

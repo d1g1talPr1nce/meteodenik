@@ -3,4 +3,6 @@
     <string name="uvodni_text">Meteo deník — Jaroslav Zvoníček</string>
     <string name="text_po_kliknuti">Dnes bylo 21 °C a jasno.</string>
     <string name="akce_zmen_text">Zapsat dnešní počasí</string>
+    <string name="teplota_format">%1$.1f °C</string>
+    <string name="mesto_nezname">Neznámé město</string>
 </resources>

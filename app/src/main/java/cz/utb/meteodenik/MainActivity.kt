@@ -22,6 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cz.utb.meteodenik.ui.theme.MetoDenikTheme
 import android.util.Log
+import android.content.Intent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.platform.LocalContext
+import cz.utb.meteodenik.model.UKAZKOVA_MESTA
 
 class MainActivity : ComponentActivity() {
 
@@ -85,25 +90,52 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MeteoObrazovka(modifier: Modifier = Modifier) {
-    var zapsano by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Column(
         modifier = modifier.padding(16.dp)
     ) {
-
         Text(
-            text = if (zapsano) {
-                stringResource(R.string.text_po_kliknuti)
-            } else {
-                stringResource(R.string.uvodni_text)
-            },
+            text = stringResource(R.string.app_name),
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
 
+        UKAZKOVA_MESTA.forEach { mesto ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(
+                            context,
+                            DetailMestaActivity::class.java
+                        ).apply {
+                            putExtra(
+                                DetailMestaActivity.EXTRA_MESTO,
+                                mesto.nazev
+                            )
+                            putExtra(
+                                DetailMestaActivity.EXTRA_TEPLOTA,
+                                mesto.teplota
+                            )
+                        }
 
-        Button(onClick = { zapsano = true }) {
-            Text(
-                text = stringResource(R.string.akce_zmen_text)
-            )
+                        context.startActivity(intent)
+                    }
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = mesto.nazev,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Text(
+                    text = stringResource(
+                        R.string.teplota_format,
+                        mesto.teplota
+                    )
+                )
+            }
         }
     }
 }

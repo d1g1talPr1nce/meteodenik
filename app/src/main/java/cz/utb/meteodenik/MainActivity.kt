@@ -27,6 +27,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.platform.LocalContext
 import cz.utb.meteodenik.model.UKAZKOVA_MESTA
+import cz.utb.meteodenik.ui.PolohaKarta
+import androidx.compose.ui.res.pluralStringResource
 
 class MainActivity : ComponentActivity() {
 
@@ -95,12 +97,21 @@ fun MeteoObrazovka(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(16.dp)
     ) {
+        val pocetMest = UKAZKOVA_MESTA.size
+
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(
+                R.string.seznam_titulek,
+                pluralStringResource(
+                    R.plurals.pocet_zaznamu,
+                    pocetMest,
+                    pocetMest
+                )
+            ),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
-
+        PolohaKarta()
         UKAZKOVA_MESTA.forEach { mesto ->
             Column(
                 modifier = Modifier

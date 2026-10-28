@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Weather Diary</string>
+    <string name="uvodni_text">Weather diary — Jaroslav Zvoníček</string>
+    <string name="text_po_kliknuti">It was 21 °C and clear today.</string>
+    <string name="akce_zmen_text">Record today\'s weather</string>
+    <string name="teplota_format">%1$.1f °C</string>
+    <string name="mesto_nezname">Unknown city</string>
+
+    <string name="seznam_titulek">My cities — %1$s</string>
+    <string name="detail_souhrn">%1$s currently has %2$.1f °C</string>
+    <string name="zapsat_zaznam">Add record</string>
+
+    <string name="poloha_zjistit">Find my location</string>
+    <string name="poloha_povolena">Location permission granted</string>
+    <string name="poloha_vysvetleni">We use approximate location to show the weather near you. You can still use the app and choose cities manually without this permission.</string>
+    <string name="poloha_pokracovat">Continue</string>
+    <string name="poloha_bez_opravneni">Location access is not granted. You can still use the app and choose cities manually. To use your location, enable it in Settings.</string>
+    <string name="otevrit_nastaveni">Open settings</string>
+    <string name="poloha_souradnice">Coordinates: %1$.5f, %2$.5f</string>
+    <string name="poloha_nedostupna">Location is currently unavailable.</string>
+    <string name="poloha_obnovit">Refresh location</string>
+
+    <plurals name="pocet_zaznamu">
+        <item quantity="one">%1$d record</item>
+        <item quantity="other">%1$d records</item>
+    </plurals>
+</resources>

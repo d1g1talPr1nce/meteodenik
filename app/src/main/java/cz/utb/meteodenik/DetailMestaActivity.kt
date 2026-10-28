@@ -49,7 +49,8 @@ class DetailMestaActivity : ComponentActivity() {
 
                         Text(
                             text = stringResource(
-                                R.string.teplota_format,
+                                R.string.detail_souhrn,
+                                mesto,
                                 teplota
                             ),
                             style = MaterialTheme.typography.bodyLarge

@@ -5,4 +5,23 @@
     <string name="akce_zmen_text">Zapsat dnešní počasí</string>
     <string name="teplota_format">%1$.1f °C</string>
     <string name="mesto_nezname">Neznámé město</string>
+    <string name="poloha_zjistit">Zjistit moji polohu</string>
+    <string name="poloha_povolena">Poloha je povolena</string>
+    <string name="poloha_vysvetleni">Přibližnou polohu používáme pro zjištění počasí ve vašem okolí. Bez tohoto oprávnění můžete aplikaci dál používat a města vybírat ručně.</string>
+    <string name="poloha_pokracovat">Pokračovat</string>
+    <string name="poloha_bez_opravneni">Přístup k poloze není povolen. Aplikaci můžete dál používat a města vybírat ručně. Pokud chcete používat svoji polohu, povolte ji v nastavení.</string>
+    <string name="otevrit_nastaveni">Otevřít nastavení</string>
+    <string name="poloha_souradnice">Souřadnice: %1$.5f, %2$.5f</string>
+    <string name="poloha_nedostupna">Polohu se zatím nepodařilo zjistit.</string>
+    <string name="poloha_obnovit">Načíst polohu znovu</string>
+    <string name="seznam_titulek">Moje města — %1$s</string>
+    <string name="detail_souhrn">%1$s má právě %2$.1f °C</string>
+    <string name="zapsat_zaznam">Zapsat záznam</string>
+
+    <plurals name="pocet_zaznamu">
+        <item quantity="one">%1$d záznam</item>
+        <item quantity="few">%1$d záznamy</item>
+        <item quantity="many">%1$d záznamu</item>
+        <item quantity="other">%1$d záznamů</item>
+    </plurals>
 </resources>

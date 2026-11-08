@@ -17,6 +17,8 @@
     <string name="seznam_titulek">Moje města — %1$s</string>
     <string name="detail_souhrn">%1$s má právě %2$.1f °C</string>
     <string name="zapsat_zaznam">Zapsat záznam</string>
+    <string name="vizitka_email_popis">E-mail: %1$s</string>
+    <string name="vizitka_avatar_popis">Avatar uživatele %1$s</string>
 
     <plurals name="pocet_zaznamu">
         <item quantity="one">%1$d záznam</item>

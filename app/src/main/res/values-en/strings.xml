@@ -19,6 +19,8 @@
     <string name="poloha_souradnice">Coordinates: %1$.5f, %2$.5f</string>
     <string name="poloha_nedostupna">Location is currently unavailable.</string>
     <string name="poloha_obnovit">Refresh location</string>
+    <string name="vizitka_email_popis">Email: %1$s</string>
+    <string name="vizitka_avatar_popis">Avatar of %1$s</string>
 
     <plurals name="pocet_zaznamu">
         <item quantity="one">%1$d record</item>

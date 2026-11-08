@@ -94,22 +94,7 @@ fun VizitkaKarta(
     }
 }
 
-private fun inicialy(jmeno: String): String =t.xml b/app/src/main/AndroidManifest.xml
-        index b65c206..f6175f9 100644
---- a/app/src/main/AndroidManifest.xml
-+++ b/app/src/main/AndroidManifest.xml
-@@ -6,6 +6,7 @@
-<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<uses-feature android:name="android.hardware.location.gps" android:required="false" />
-
-+
-<application
-android:allowBackup="true"
-android:dataExtractionRules="@xml/data_extraction_rules"
-~
-~
-~
-~
+private fun inicialy(jmeno: String): String =
     jmeno.trim()
         .split(Regex("\\s+"))
         .filter { it.isNotEmpty() }

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import cz.utb.meteodenik.ui.MestaObrazovka
+import cz.utb.meteodenik.navigace.MeteoDenikNavHost
 import cz.utb.meteodenik.ui.theme.MetoDenikTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MetoDenikTheme {
-                MestaObrazovka()
+                MeteoDenikNavHost()
             }
         }
     }

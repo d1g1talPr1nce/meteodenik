@@ -1,7 +1,5 @@
 package cz.utb.meteodenik.ui
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,12 +25,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -40,56 +36,43 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cz.utb.meteodenik.DetailMestaActivity
 import cz.utb.meteodenik.R
 import cz.utb.meteodenik.model.Mesto
 import cz.utb.meteodenik.model.UKAZKOVA_MESTA
 import cz.utb.meteodenik.ui.theme.MetoDenikTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 // STAVOVÁ funkce
 @Composable
-fun MestaObrazovka(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+fun MestaObrazovka(
+    onMesto: (Int) -> Unit,                    // navigace přijde zvenku – obrazovka neví kam
+    modifier: Modifier = Modifier,
+    vm: MestaViewModel = viewModel()          // NIKDY MestaViewModel()
+) {
+    val stav by vm.stav.collectAsStateWithLifecycle()
 
-    var mesta by remember { mutableStateOf(UKAZKOVA_MESTA) }
+    // Rozepsaný text je stav ovládacího prvku, ne data obrazovky: rememberSaveable ho uloží
+    // do Bundle a přežije otočení i smrt procesu, kdežto ViewModel by smrt procesu nepřežil.
     var novyNazev by rememberSaveable { mutableStateOf("") }
-    var jeDuplikat by rememberSaveable { mutableStateOf(false) }
 
     MestaObsah(
-        mesta = mesta,
+        mesta = stav.mesta,
         novyNazev = novyNazev,
-        jeDuplikat = jeDuplikat,
+        jeDuplikat = stav.jeDuplikat,
         onNovyNazevChange = {
             novyNazev = it
-            jeDuplikat = false          // chyba zmizí při každé změně textu
+            vm.zrusChybu()
         },
         onPridatMesto = {
-            val nazev = novyNazev.trim()
-            val uzExistuje = mesta.any { it.nazev.trim().equals(nazev, ignoreCase = true) }
-            if (uzExistuje) {
-                jeDuplikat = true
-            } else {
-                val noveId = (mesta.maxOfOrNull { it.id } ?: 0) + 1
-                mesta = mesta + Mesto(noveId, nazev, null)      // NOVÝ seznam
-                novyNazev = ""
-            }
+            if (vm.pridej(novyNazev)) novyNazev = ""
         },
-        onSmazatMesto = { id ->
-            mesta = mesta.filterNot { it.id == id }             // NOVÝ seznam
-        },
-        onOtevritDetail = { mesto -> otevriDetail(context, mesto) },
+        onSmazatMesto = vm::smaz,
+        onOtevritDetail = { mesto -> onMesto(mesto.id) },
         modifier = modifier,
         horniObsah = { PolohaKarta() }
     )
-}
-
-private fun otevriDetail(context: Context, mesto: Mesto) {
-    val intent = Intent(context, DetailMestaActivity::class.java).apply {
-        putExtra(DetailMestaActivity.EXTRA_MESTO, mesto.nazev)
-        mesto.teplota?.let { putExtra(DetailMestaActivity.EXTRA_TEPLOTA, it) }
-    }
-    context.startActivity(intent)
 }
 
 

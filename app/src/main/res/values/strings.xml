@@ -26,6 +26,8 @@
     <string name="mesto_smazat">Smazat</string>
     <string name="mesto_smazat_popis">Smazat město %1$s</string>
     <string name="mesto_teplota_neznama">Teplota zatím neznámá</string>
+    <string name="detail_zpet">Zpět</string>
+    <string name="detail_nenalezeno">Město s tímto číslem neexistuje. Možná bylo smazáno.</string>
 
     <plurals name="mesta_pocet">
         <item quantity="one">Sledujete %1$d město</item>

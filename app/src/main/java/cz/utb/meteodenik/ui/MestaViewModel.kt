@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import androidx.lifecycle.viewModelScope
+import cz.utb.meteodenik.data.MestaRepozitar
+import kotlinx.coroutines.launch
 
 /** Všechno, co je na obrazovce seznamu vidět. Neměnné – změna = nová instance přes copy(). */
 data class MestaUiState(
@@ -17,35 +20,35 @@ data class MestaUiState(
 
 class MestaViewModel : ViewModel() {
 
-    // Soukromý: zapisovat smí jen ViewModel.
-    private val _stav = MutableStateFlow(MestaUiState(mesta = UKAZKOVA_MESTA))
-
-    // Veřejný: UI smí jen číst.
+    private val _stav = MutableStateFlow(MestaUiState(mesta = MestaRepozitar.mesta.value))
     val stav: StateFlow<MestaUiState> = _stav.asStateFlow()
+
+    init {
+        // Kdykoli se seznam v repozitáři změní, promítneme ho do stavu obrazovky.
+        viewModelScope.launch {
+            MestaRepozitar.mesta.collect { mesta ->
+                _stav.update { it.copy(mesta = mesta) }
+            }
+        }
+    }
 
     /** Vrátí true, pokud se město přidalo – UI pak vyprázdní pole. */
     fun pridej(nazev: String): Boolean {
         val cistyNazev = nazev.trim()
         if (cistyNazev.isEmpty()) return false
 
-        var pridano = false
-        _stav.update { s ->
-            val uzExistuje = s.mesta.any { it.nazev.trim().equals(cistyNazev, ignoreCase = true) }
-            if (uzExistuje) {
-                pridano = false
-                s.copy(jeDuplikat = true)
-            } else {
-                pridano = true
-                val noveId = (s.mesta.maxOfOrNull { it.id } ?: 0) + 1
-                s.copy(mesta = s.mesta + Mesto(noveId, cistyNazev, null), jeDuplikat = false)
-            }
+        val uzExistuje = _stav.value.mesta.any { it.nazev.trim().equals(cistyNazev, ignoreCase = true) }
+        if (uzExistuje) {
+            _stav.update { it.copy(jeDuplikat = true) }
+            return false
         }
-        return pridano
+
+        MestaRepozitar.pridej(cistyNazev)
+        _stav.update { it.copy(jeDuplikat = false) }
+        return true
     }
 
-    fun smaz(id: Int) {
-        _stav.update { s -> s.copy(mesta = s.mesta.filterNot { it.id == id }) }
-    }
+    fun smaz(id: Int) = MestaRepozitar.smaz(id)
 
     fun zrusChybu() {
         _stav.update { s -> if (s.jeDuplikat) s.copy(jeDuplikat = false) else s }
